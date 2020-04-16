@@ -1,8 +1,11 @@
 package com.example.pytkirja;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -38,6 +41,8 @@ public class FillAgenda extends AppCompatActivity {
     Spinner chooseSection;
     int choiceSection;
 
+    private static final int STORAGE_CODE = 1000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -46,14 +51,17 @@ public class FillAgenda extends AppCompatActivity {
         sectionProposal = (EditText) findViewById(R.id.editText_proposal);
 
 
-/*
+
         //Here we will get the right agenda corresponding the right meeting
         String date = getIntent().getStringExtra("date");
+        System.out.println(date);
         int listLength = Association.getInstance().meetings.size();
         for (int i = 0; i < listLength; i++) {
             if (Association.getInstance().meetings.get(i).getDate().contains(date)) {
                 agenda = Association.getInstance().meetings.get(i).agendas.get(0);
-            }*/
+                System.out.println(agenda);
+            }
+        }
 
             agenda = Association.getInstance().meetings.get(0).agendas.get(0);
 
@@ -91,9 +99,19 @@ public class FillAgenda extends AppCompatActivity {
             buttonPDF.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String fullAgenda = agenda.createAgendaText();
-                    createPdf(fullAgenda);
 
+                    //Check if we have a permission to write the PDF
+                    if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_DENIED) {
+                        //permission was not granted, request it
+                        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permissions, STORAGE_CODE);
+                    } else {
+                        //Permission was granted
+                        String fullAgenda = agenda.createAgendaText();
+                        createPdf(fullAgenda);
+
+                    }
                 }
             });
 
@@ -118,25 +136,23 @@ public class FillAgenda extends AppCompatActivity {
             ArrayAdapter<Section> aa3 = new ArrayAdapter<Section>(this, simple_spinner_item, agenda.sections);
             aa3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             chooseSection.setAdapter(aa3);
-            choiceSection = chooseSection.getSelectedItemPosition();
 
-            chooseSection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-            {
+            chooseSection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-                    choiceSection = chooseSection.getSelectedItemPosition();
-                    Section sectionChosen = (Section) chooseSection.getSelectedItem();
-
-                    //choiceSection = chooseSection.getSelectedItemPosition();
-                    //agenda.sections.get(position);
-
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    choiceSection = position;
+                    System.out.print("****\n" + position + "****");
+                    System.out.print("****\n" + choiceSection + "****");
+                    sectionTitle.setText(("Lisää otsikko pykälälle: " + (choiceSection + 1)));
+                    sectionProposal.setText(("Lisää päätösehdotus pykälälle: " + (choiceSection + 1)));
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> arg0) {
-                    // TODO Auto-generated method stub
+                public void onNothingSelected(AdapterView<?> parent) {
+
                 }
             });
+
         }
 
 
@@ -158,7 +174,7 @@ public class FillAgenda extends AppCompatActivity {
 
         String fileName = agenda.getDocType() + " " + agenda.getDate();
 
-        String filePath = Environment.getExternalStorageDirectory().getPath() + fileName + ".pdf";
+        String filePath = Environment.getExternalStorageDirectory().getPath() + "/" + fileName + ".pdf";
 
         File file = new File(filePath);
 
@@ -174,6 +190,25 @@ public class FillAgenda extends AppCompatActivity {
         document.close();
 
     }
+
+    //handle permission result
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case STORAGE_CODE:{
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    //permission was granted from popup, call savepdf method
+                    String fullAgenda = agenda.createAgendaText();
+                    createPdf(fullAgenda);
+                }
+                else {
+                    //permission was denied from popup, show error message
+                    Toast.makeText(this, "Permission denied...!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
 
 
 }

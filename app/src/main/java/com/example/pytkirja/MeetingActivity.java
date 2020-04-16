@@ -21,7 +21,7 @@ public class MeetingActivity extends AppCompatActivity {
 
     Button buttonCreate, buttonStart, buttonFill;
     EditText inputDate, inputTime, inputType, inputLocation;
-    Meeting meetingChosen = null;
+    int mtChosenInt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class MeetingActivity extends AppCompatActivity {
 
         //Setting the spinner to get the meeting to start or fill the agenda
         //On selected will return current meeting which has always 2 documents
-        final Spinner spinStart = (Spinner) findViewById(R.id.spinner_start);
+        final Spinner spinStart = findViewById(R.id.spinner_start);
         ArrayAdapter<Meeting> aa2 = new ArrayAdapter<Meeting>(this, simple_spinner_item, Association.getInstance().meetings);
         aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinStart.setAdapter(aa2);
@@ -40,14 +40,16 @@ public class MeetingActivity extends AppCompatActivity {
         spinStart.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                meetingChosen = (Meeting) parent.getItemAtPosition(position);
+                //Meeting meetingChosen = Association.getInstance().meetings.get(position);
+                mtChosenInt = parent.getSelectedItemPosition();
+                System.out.print("***\n" + mtChosenInt + " " + (mtChosenInt + 1) + "\n*****" );
                 Toast.makeText(parent.getContext(), "Valinta: " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                meetingChosen = Association.getInstance().meetings.get(0);
+
             }
         });
 
@@ -96,9 +98,13 @@ public class MeetingActivity extends AppCompatActivity {
         buttonFill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //meetingChosen = (Meeting) spinStart.getSelectedItem();
-                //meetingChosen = Association.getInstance().meetings.get(position);
-                openFillActivity();
+
+                //TODO remove check prints
+                System.out.println("*****\n" + "*****\n");
+                Meeting meetingChosen = Association.getInstance().meetings.get(mtChosenInt);
+
+                System.out.println(meetingChosen.toString());
+                openFillActivity(meetingChosen.getDate());
             }
         });
 
@@ -107,8 +113,9 @@ public class MeetingActivity extends AppCompatActivity {
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //meetingChosen = (Meeting) spinStart.getSelectedItem();
-                openMeetingMinutes();
+                Meeting meetingChosen = Association.getInstance().meetings.get(mtChosenInt);
+                System.out.println(meetingChosen.toString() + "Johannes");
+                openMeetingMinutes(meetingChosen.getDate());
             }
         });
 
@@ -118,17 +125,15 @@ public class MeetingActivity extends AppCompatActivity {
 
 
 
-    public void openFillActivity() {
+    public void openFillActivity(String s) {
         Intent intent = new Intent(this, FillAgenda.class);
-        //String s = meetingChosen.getDate();
-        //intent.putExtra("date", s);
+        intent.putExtra("date", s);
         startActivity(intent);
     }
 
-    public void openMeetingMinutes() {
+    public void openMeetingMinutes(String s) {
         Intent intent = new Intent(this, MinutesMeeting.class);
-        //String s = meetingChosen.getDate();
-        //intent.putExtra("date", s);
+        intent.putExtra("date", s);
         startActivity(intent);
     }
 

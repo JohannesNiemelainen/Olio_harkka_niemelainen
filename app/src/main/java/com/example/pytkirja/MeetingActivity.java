@@ -22,6 +22,7 @@ public class MeetingActivity extends AppCompatActivity {
     Button buttonCreate, buttonStart, buttonFill;
     EditText inputDate, inputTime, inputType, inputLocation;
     int mtChosenInt;
+    ArrayAdapter<Meeting> aa2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,17 +33,16 @@ public class MeetingActivity extends AppCompatActivity {
         //Setting the spinner to get the meeting to start or fill the agenda
         //On selected will return current meeting which has always 2 documents
         final Spinner spinStart = findViewById(R.id.spinner_start);
-        ArrayAdapter<Meeting> aa2 = new ArrayAdapter<Meeting>(this, simple_spinner_item, Association.getInstance().meetings);
+        aa2 = new ArrayAdapter<Meeting>(this, simple_spinner_item, new ArrayList<Meeting>());
         aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinStart.setAdapter(aa2);
 
 
+        //GETTING THE RIGHT POSITION FOR THE MEETING
         spinStart.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Meeting meetingChosen = Association.getInstance().meetings.get(position);
                 mtChosenInt = parent.getSelectedItemPosition();
-                System.out.print("***\n" + mtChosenInt + " " + (mtChosenInt + 1) + "\n*****" );
                 Toast.makeText(parent.getContext(), "Valinta: " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
 
             }
@@ -60,6 +60,9 @@ public class MeetingActivity extends AppCompatActivity {
         inputTime = (EditText) findViewById(R.id.editText_time);
         inputType = (EditText) findViewById(R.id.editText_type);
         inputLocation = (EditText) findViewById(R.id.editText_location);
+
+        //HERE WE CREATE FIRST THE MEETING AND THEN CORRESPONDING DOCUMENTS
+        //AND ADD THEM TO THE RIGHT MEETING
         buttonCreate = (Button) findViewById(R.id.button_createMeeting);
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             //Here is done a lot: creating a meeting, agenda and minutes at the same time
@@ -70,7 +73,6 @@ public class MeetingActivity extends AppCompatActivity {
                 String ty = inputType.getText().toString();
                 String l = inputLocation.getText().toString();
                 Meeting mt = new Meeting(ty, d, ti, l);
-                Association.getInstance().meetings.add(mt);
                 Agenda agenda = new Agenda();
                 Minutes minutes = new Minutes();
 
@@ -89,6 +91,11 @@ public class MeetingActivity extends AppCompatActivity {
                 mt.agendas.add(agenda);
                 mt.minutes.add(minutes);
 
+                Association.getInstance().meetings.add(mt);
+                aa2.add(mt);
+                aa2.notifyDataSetChanged(); //THIS WAS MY PROBLEM INITIALLY, I DID NOT NOTIFY ABOYT CHANGES
+                //THE SPINNER DISPLAYED CHANGED INFO BUT DID NOT ADD THE ACTUAL ITEMS THERE
+
             }
         });
 
@@ -99,22 +106,17 @@ public class MeetingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //TODO remove check prints
-                System.out.println("*****\n" + "*****\n");
                 Meeting meetingChosen = Association.getInstance().meetings.get(mtChosenInt);
-
-                System.out.println(meetingChosen.toString());
                 openFillActivity(meetingChosen.getDate());
             }
         });
 
-        //OPENS PLACE TO GO THROUGH THE AGENDA
+        //OPENS PLACE TO GO THROUGH THE MINUTES
         buttonStart = (Button) findViewById(R.id.button_startMeet);
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Meeting meetingChosen = Association.getInstance().meetings.get(mtChosenInt);
-                System.out.println(meetingChosen.toString() + "Johannes");
                 openMeetingMinutes(meetingChosen.getDate());
             }
         });
@@ -125,12 +127,16 @@ public class MeetingActivity extends AppCompatActivity {
 
 
 
+    //HERE I SEND DATE INFO AS PART OF THE ACTIVITY OPENER, TO GET
+    //THE RIGHT AGENDA OPEN IN THE NEXT ACTIVITY
     public void openFillActivity(String s) {
         Intent intent = new Intent(this, FillAgenda.class);
         intent.putExtra("date", s);
         startActivity(intent);
     }
 
+    //HERE I SEND DATE INFO AS PART OF THE ACTIVITY OPENER, TO GET
+    //THE RIGHT AGENDA OPEN IN THE NEXT ACTIVITY
     public void openMeetingMinutes(String s) {
         Intent intent = new Intent(this, MinutesMeeting.class);
         intent.putExtra("date", s);

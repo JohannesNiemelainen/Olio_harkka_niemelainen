@@ -38,14 +38,14 @@ public abstract class Document extends Meeting {
         this.docType = docType;
     }
 
-    /*public void createPDF () {
-        PrintedPdfDocument document = new PrintedPdfDocument(Context, PrintAttributes);
-    }*/
-
+    //NOT HAD TIME TO DO THESE, AND
+    //ONE CAN SHARE A PDF IF ONE IS CREATED
     public void shareDocument () {
     //TODO create pdf sharing via email
     }
 
+    //NOT HAD TIME TO DO THESE, AND
+    //ONE CAN SHARE A PDF IF ONE IS CREATED
     public void printDocument () {
         //TODO create pdfPrinting via email
     }

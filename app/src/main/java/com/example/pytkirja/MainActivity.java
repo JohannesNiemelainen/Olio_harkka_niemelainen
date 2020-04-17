@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //GETTING VALUE FROM THE BACK PRESSED BUTTON
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent name) {
         if (requestCode == 123) {

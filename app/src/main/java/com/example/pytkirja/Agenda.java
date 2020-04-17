@@ -8,12 +8,14 @@ public class Agenda extends Document implements Serializable {
         docType = "Esityslista";
     }
 
+    //OBSOLETE IN THE END; AS I AM RUNNING OUT OF TIME
     public void fillSection () {
 
 
     }
 
-
+    //Here we will create the Full Agenda text to pass it on to FileWriter
+    //IT IS A LONG TEXT
     public String createAgendaText() {
         String fullAgenda = getDocType() + "\n" +
                 getType() + "\n" +

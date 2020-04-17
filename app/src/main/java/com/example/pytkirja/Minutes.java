@@ -11,6 +11,7 @@ public class Minutes extends Agenda implements Serializable {
         docType = "Pöytäkirja";
     }
 
+    //OBSOLETE IN THE END; AS I AM RUNNING OUT OF TIME
     public int getSignerCount() {
         return signerCount;
     }
@@ -32,6 +33,7 @@ public class Minutes extends Agenda implements Serializable {
     }
 
     //Here we will create the Full Minutes text to pass it on to FileWriter
+    //IT IS A LONG TEXT
     public String createMinutesText() {
         String fullMinutes = getDocType() + "\n" +
                 getType() + "\n" +

@@ -13,6 +13,10 @@ public class Meeting {
     protected ArrayList<Agenda> agendas = null;
     protected ArrayList<Minutes> minutes = null;
 
+    //MEETINGS CONTAIN ONE AGENDA AND MINUTES
+    //HOWEVER I CHOSE ARRAYLIST AS A WAY TO SAVE THE INFO AS IT WAS EASILY RETRIEVABLE
+    //FROM THERE
+
     public Meeting () {
         type = "";
         date = "";
@@ -55,12 +59,6 @@ public class Meeting {
         this.time = time;
     }
 
-    //Probably will not need this as Android text input gives already Date and time fields
-    /*public void setDatetime(int y, int mon, int d, int h, int min) {
-        GregorianCalendar d1 = new GregorianCalendar(y, mon, d, h, min);
-        this.date = d1.toString();
-    }*/
-
     public String getLocation() {
         return location;
     }
@@ -74,11 +72,15 @@ public class Meeting {
         this.location = location;
     }
 
+    //OBSOLETE AS IT WAS IN THE END CREATED FROM THE
+    //MEETING ACTIVITY
     public Agenda createAgenda () {
         Agenda agenda = new Agenda ();
         return agenda;
     }
 
+    //OBSOLETE AS IT WAS IN THE END CREATED FROM THE
+    //MEETING ACTIVITY
     public Minutes createMinutes () {
         Minutes minutes = new Minutes();
         return minutes;

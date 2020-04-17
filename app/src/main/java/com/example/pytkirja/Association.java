@@ -18,15 +18,10 @@ public class Association {
         this.boardMembers = new ArrayList<BoardMember>();
         this.meetings = new ArrayList<Meeting>();
 
-        //MIETI ONKO TARPEEN TÄLLAINEN
-        /*for (int i = 0, i < boardSize; i++) {
-            BoardMember bm = new BoardMember();
-            boardMembers.add(bm);
-
-        }*/
 
     }
 
+    //SINGLETON principle
     public Association (String n, String a, int bS) {
         name = n;
         address = a;
@@ -67,6 +62,8 @@ public class Association {
         this.boardSize = boardSize;
     }
 
+    //OBSOLETE, USED IT AT SOME POINT BUT LEFT IT OUT AS
+    //THE LAYOUT DID NOT LET ME USE IT
     public String readMembers(){
         String membersAll = "Hallituksen jäsenet:";
         for (int i = 0; i<boardSize; i++) {

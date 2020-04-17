@@ -71,6 +71,7 @@ public class AssociationActivity extends AppCompatActivity {
             }
         });
 
+        //SET THE RIGHT AMOUNT OF MEMBERS FOR THE ASSOCIATION's BOARD
         seekBar = (SeekBar) findViewById(R.id.seekBar_boardMember);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -91,6 +92,7 @@ public class AssociationActivity extends AppCompatActivity {
 
     }
 
+    //I WANTED TO ADD ONE ONBACKPRESSED OVERRIDDEN METHOD
     @Override
     public void onBackPressed () {
         String name = Association.getInstance().name;

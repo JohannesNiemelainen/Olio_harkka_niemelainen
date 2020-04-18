@@ -174,9 +174,12 @@ public class FillAgenda extends AppCompatActivity {
 
         //FIRST CHECK FOR THE DIRECTORY
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/pöytäkirja/";
+        
         File dir = new File(path);
+        
         if (!dir.exists())
             dir.mkdirs();
+        
         String fileName = agenda.getDocType() + "_" + agenda.getDate();
 
         //THEN START THE OUTPUT PROCESS
@@ -245,12 +248,12 @@ public class FillAgenda extends AppCompatActivity {
         switch (requestCode) {
             case STORAGE_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //permission was granted from popup, call savepdf method
+                    //IF PERMISSION FROM THE POP UP
                     String fullAgenda = agenda.createAgendaText();
                     createNewPdf(fullAgenda);
                 } else {
-                    //permission was denied from popup, show error message
-                    Toast.makeText(this, "Permission denied...!", Toast.LENGTH_SHORT).show();
+                    //IF PERMISSION DENIED
+                    Toast.makeText(this, "Ei pääsyä", Toast.LENGTH_SHORT).show();
                 }
             }
         }

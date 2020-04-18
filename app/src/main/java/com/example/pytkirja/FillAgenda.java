@@ -182,12 +182,14 @@ public class FillAgenda extends AppCompatActivity {
         //THEN START THE OUTPUT PROCESS
         try {
             final File file = new File(dir, fileName + ".pdf");
+            
             if (!file.getParentFile().exists())
                 file.getParentFile().mkdirs();
+            
             if (!file.exists())
                 file.createNewFile();
+            
             FileOutputStream fOut = new FileOutputStream(file);
-
 
             PdfDocument document = new PdfDocument();
             PdfDocument.PageInfo pageInfo = new

@@ -131,17 +131,22 @@ public class MinutesMeeting extends AppCompatActivity {
         //FIRST CREATING AND CHECKING
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/pöytäkirja/";
         File dir = new File(path);
+        
         if (!dir.exists())
             dir.mkdirs();
+        
         String fileName = minutes.getDocType() + "_" + minutes.getDate();
 
         //THEN START THE OUTPUT PROCESS,
         try {
             final File file = new File(dir, fileName + ".pdf");
+            
             if (!file.getParentFile().exists())
                 file.getParentFile().mkdirs();
+            
             if (!file.exists())
                 file.createNewFile();
+            
             FileOutputStream fOut = new FileOutputStream(file);
 
 
